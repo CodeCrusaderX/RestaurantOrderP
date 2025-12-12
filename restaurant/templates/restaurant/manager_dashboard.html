@@ -1,0 +1,42 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="navbar" style="background: #212121;">
+    <div class="brand">📊 Manager Dashboard</div>
+    <div style="display: flex; gap: 15px;">
+        <a href="{% url 'menu_manage' %}" class="btn" style="background: #333; font-size: 0.9rem;">Manage Menu</a>
+        <a href="{% url 'logout' %}" class="btn" style="background: #D32F2F; font-size: 0.9rem;">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card" style="text-align: center; padding: 40px;">
+        <h3 style="color: var(--secondary-text); margin-bottom: 10px;">Total Revenue</h3>
+        <h1 style="color: var(--success-color); font-size: 3rem;">₹{{ revenue }}</h1>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">Top Items</h2>
+            {% for item in popular_items %}
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0;">
+                <span>{{ item.name }}</span>
+                <span style="color: var(--primary-color);">{{ item.total_sold|default:"0" }} sold</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">Recent Activity</h2>
+            {% for order in recent_orders %}
+            <div style="margin-bottom: 10px; font-size: 0.9rem;">
+                <span class="status-badge status-{{ order.is_active|yesno:'preparing,delivered' }}">
+                    {% if order.is_active %}Active{% else %}Closed{% endif %}
+                </span>
+                Table {{ order.table.number }} - ₹{{ order.total_amount }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="container" style="height: 100vh; display: flex; align-items: center; justify-content: center;">
+    <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
+        <h1 style="color: var(--primary-color); margin-bottom: 30px;">GastroGenius</h1>
+
+        <form method="POST" style="text-align: left;">
+            {% csrf_token %}
+
+            {% if error %}
+            <div
+                style="background: rgba(255, 0, 0, 0.2); color: #ff8a80; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px;">Username</label>
+                <input type="text" name="username" required>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <label style="display: block; margin-bottom: 8px;">Password</label>
+                <input type="password" name="password" required
+                    style="background: #2C2C2C; border: 1px solid #3E3E3E; color: white; padding: 12px; border-radius: 8px; width: 100%; box-sizing: border-box;">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

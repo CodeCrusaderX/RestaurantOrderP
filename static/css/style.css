@@ -1,0 +1,222 @@
+/* Global Styles */
+:root {
+    --bg-color: #121212;
+    --surface-color: #1E1E1E;
+    --primary-color: #FF5722;
+    --primary-hover: #E64A19;
+    --text-color: #E0E0E0;
+    --secondary-text: #B0B0B0;
+    --success-color: #00C853;
+    --warning-color: #FFD600;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+    font-weight: 600;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Utilities */
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* Glassmorphism Card */
+.card {
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Inputs */
+input[type="text"], input[type="number"], input[type="tel"] {
+    background: #2C2C2C;
+    border: 1px solid #3E3E3E;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1rem;
+    outline: none;
+}
+
+input:focus {
+    border-color: var(--primary-color);
+}
+
+/* Navbar */
+.navbar {
+    background: var(--surface-color);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.brand {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Menu Specifics */
+.category-scroller {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+    gap: 10px;
+    margin-bottom: 20px;
+    scrollbar-width: none; /* Firefox */
+}
+.category-scroller::-webkit-scrollbar {
+    display: none;
+}
+
+.cat-pill {
+    background: #333;
+    padding: 8px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.cat-pill.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+}
+
+.item-info h4 {
+    margin-bottom: 5px;
+}
+
+.item-price {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #333;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.qty-btn {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+}
+
+.qty-val {
+    width: 20px;
+    text-align: center;
+}
+
+/* Floating Action Button for checkout */
+.fab-checkout {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+/* Kitchen Board */
+.kitchen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.order-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.kitchen-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed #444;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+.status-queued { background: #555; }
+.status-preparing { background: #F57F17; color: black; }
+.status-prepared { background: var(--success-color); }
+.status-delivered { background: #333; color: #777; text-decoration: line-through; }

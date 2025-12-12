@@ -1,0 +1,62 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="navbar">
+    <div class="brand">Bill - Table {{ table.number }}</div>
+</div>
+
+<div class="container">
+    <div class="card" id="bill-summary">
+        <h2 style="text-align: center; color: var(--primary-color);">Total Payable</h2>
+        <div style="font-size: 3rem; text-align: center; margin: 20px 0;">₹{{ order.total_amount }}</div>
+
+        <div id="phone-section">
+            <p style="text-align: center; margin-bottom: 10px;">Enter Customer Phone for Digital Bill</p>
+            <input type="tel" id="customerPhone" placeholder="Mobile Number" style="margin-bottom: 20px;">
+            <button class="btn btn-primary btn-block" onclick="sendBill()">Send Bill & Pay</button>
+        </div>
+    </div>
+
+    <!-- QR Section (Hidden initially) -->
+    <div class="card" id="qr-section" style="display: none; text-align: center;">
+        <h2>Payment QR</h2>
+        <div
+            style="background: white; width: 200px; height: 200px; margin: 20px auto; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;">
+            [QR CODE]
+        </div>
+        <p style="color: var(--success-color); margin-bottom: 20px;">Bill Sent to <span id="sent-phone"></span></p>
+
+        <p>Waiting for payment...</p>
+
+        <a href="{% url 'clear_session' table.id %}" class="btn btn-primary btn-block"
+            style="background: #D32F2F;">Payment Received & Clear Table</a>
+    </div>
+</div>
+
+<script>
+    async function sendBill() {
+        const phone = document.getElementById('customerPhone').value;
+        if (!phone) return alert("Please enter phone number");
+
+        // Call API
+        const formData = new FormData();
+        formData.append('phone', phone);
+
+        try {
+            const res = await fetch("{% url 'bill' table.id %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                body: formData
+            });
+
+            if (res.ok) {
+                document.getElementById('bill-summary').style.display = 'none';
+                document.getElementById('qr-section').style.display = 'block';
+                document.getElementById('sent-phone').innerText = phone;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+</script>
+{% endblock %}

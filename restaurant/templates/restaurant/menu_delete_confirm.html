@@ -1,0 +1,21 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="navbar">
+    <div class="brand">Confirm Delete</div>
+</div>
+
+<div class="container" style="height: 80vh; display: flex; align-items: center; justify-content: center;">
+    <div class="card" style="text-align: center; max-width: 400px;">
+        <h2 style="margin-bottom: 20px;">Delete "{{ item.name }}"?</h2>
+        <p style="color: #aaa; margin-bottom: 30px;">This action cannot be undone.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary"
+                style="background: #D32F2F; width: 100%; margin-bottom: 10px;">Yes, Delete</button>
+            <a href="{% url 'menu_manage' %}" class="btn" style="background: #333; width: 100%;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

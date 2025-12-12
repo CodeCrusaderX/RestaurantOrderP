@@ -1,0 +1,59 @@
+{% extends 'restaurant/base.html' %}
+
+{% block content %}
+<div class="navbar">
+    <div class="brand">Table {{ table.number }} Status</div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h2 style="margin-bottom: 20px;">Current Order</h2>
+        {% if items %}
+        {% for item in items %}
+        <div class="menu-item">
+            <div class="item-info">
+                <h4>{{ item.item.name }} (x{{ item.quantity }})</h4>
+                <span class="status-badge status-{{ item.status }}">{{ item.status|upper }}</span>
+            </div>
+            <!-- Action for Waiter -->
+            {% if item.status == 'prepared' %}
+            <button class="btn" style="padding: 5px 10px; font-size: 0.8rem; background: #FFF; color: #000;"
+                onclick="markDelivered({{ item.id }})">Mark Delivered</button>
+            {% endif %}
+            <div class="item-price">₹{{ item.subtotal }}</div>
+        </div>
+        {% endfor %}
+
+        <div
+            style="border-top: 1px solid #444; margin-top: 20px; padding-top: 10px; text-align: right; font-size: 1.2rem; font-weight: bold;">
+            Total: ₹{{ order.total_amount }}
+        </div>
+
+        {% else %}
+        <p>No items ordered yet.</p>
+        {% endif %}
+    </div>
+
+    <div style="display: flex; gap: 15px; margin-top: 20px;">
+        <a href="{% url 'menu' table.id %}" class="btn btn-primary" style="flex: 1;">Add More Items</a>
+        <a href="{% url 'bill' table.id %}" class="btn btn-success" style="flex: 1;">Generate Bill</a>
+    </div>
+</div>
+
+<!-- Poll for updates -->
+<script>
+    function markDelivered(itemId) {
+        fetch("{% url 'update_order_status' %}", {
+            method: 'POST',
+            body: JSON.stringify({ item_id: itemId, status: 'delivered' }),
+            headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+        }).then(() => {
+            window.location.reload();
+        });
+    }
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 15000); // Poll every 15s to check if status changed
+</script>
+{% endblock %}
