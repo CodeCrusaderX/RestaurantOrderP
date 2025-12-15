@@ -29,8 +29,11 @@ class Table(models.Model):
     def is_occupied(self):
         return self.orders.filter(is_active=True).exists()
 
+from django.contrib.auth.models import User
+
 class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='orders')
+    waiter = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
     customer_phone = models.CharField(max_length=15, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -10,6 +10,29 @@
 </div>
 
 <div class="container">
+    <div class="card" style="margin-bottom: 20px;">
+        <h2 style="margin-bottom: 20px;">Live Table Status</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px;">
+            {% for t in table_stats %}
+            <div
+                style="background: {% if t.is_occupied %}#333{% else %}#1B5E20{% endif %}; padding: 15px; border-radius: 8px; text-align: center;">
+                <h3 style="margin-bottom: 5px;">Table {{ t.number }}</h3>
+                {% if t.is_occupied %}
+                <span style="color: #FF5722;">Occupied</span>
+                <div style="font-size: 0.9rem; margin-top: 5px; color: #aaa;">
+                    Serviced by: <strong style="color: white;">{{ t.waiter|default:"Unknown" }}</strong>
+                </div>
+                <a href="{% url 'force_clear_table' t.id %}" class="btn"
+                    style="margin-top: 10px; padding: 5px 10px; font-size: 0.8rem; background: #D32F2F; color: white; display: inline-block;">Force
+                    Clear</a>
+                {% else %}
+                <span style="color: var(--success-color);">Vacant</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
     <div class="card" style="text-align: center; padding: 40px;">
         <h3 style="color: var(--secondary-text); margin-bottom: 10px;">Total Revenue</h3>
         <h1 style="color: var(--success-color); font-size: 3rem;">₹{{ revenue }}</h1>

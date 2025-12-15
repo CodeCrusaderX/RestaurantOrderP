@@ -43,7 +43,11 @@ def index(request):
             })
             
         # Create active order immediately to lock the table
-        Order.objects.get_or_create(table=table, is_active=True)
+        order, created = Order.objects.get_or_create(table=table, is_active=True)
+        if created:
+            order.waiter = request.user
+            order.save()
+            
         return redirect('menu', table_id=table.id)
     
     tables = Table.objects.all()
@@ -195,10 +199,23 @@ def manager_dashboard(request):
 
     recent_orders = Order.objects.order_by('-created_at')[:10]
 
+    # Table Status
+    tables = Table.objects.all().order_by('number')
+    table_stats = []
+    for t in tables:
+         active_order = t.orders.filter(is_active=True).first()
+         table_stats.append({
+             'id': t.id,
+             'number': t.number,
+             'is_occupied': bool(active_order),
+             'waiter': active_order.waiter.username if active_order and active_order.waiter else None
+         })
+
     return render(request, 'restaurant/manager_dashboard.html', {
         'revenue': total_revenue,
         'popular_items': popular_items,
-        'recent_orders': recent_orders
+        'recent_orders': recent_orders,
+        'table_stats': table_stats
     })
 
 @login_required
@@ -251,3 +268,19 @@ def menu_delete(request, item_id):
         return redirect('menu_manage')
     
     return render(request, 'restaurant/menu_delete_confirm.html', {'item': item})
+
+@login_required
+def force_clear_table(request, table_id):
+    if not request.user.groups.filter(name='Manager').exists():
+        return redirect('index')
+    
+    table = get_object_or_404(Table, id=table_id)
+    order = Order.objects.filter(table=table, is_active=True).first()
+    if order:
+        order.is_active = False
+        # Optionally mark as paid or just cancelled. 
+        # For force clear, we assume cancellation or manual override, so maybe not paid.
+        # But to keep data clean, let's just deactivate it.
+        order.save()
+    
+    return redirect('manager_dashboard')

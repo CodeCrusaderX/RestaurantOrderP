@@ -22,4 +22,5 @@ urlpatterns = [
     path('manager/menu/add/', views.menu_add, name='menu_add'),
     path('manager/menu/edit/<int:item_id>/', views.menu_edit, name='menu_edit'),
     path('manager/menu/delete/<int:item_id>/', views.menu_delete, name='menu_delete'),
+    path('manager/table/clear/<int:table_id>/', views.force_clear_table, name='force_clear_table'),
 ]
