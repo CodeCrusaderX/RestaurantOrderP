@@ -10,6 +10,7 @@ urlpatterns = [
     path('order/submit/<int:table_id>/', views.submit_order, name='submit_order'),
     path('order/status/<int:table_id>/', views.order_status, name='order_status'),
     path('order/bill/<int:table_id>/', views.bill, name='bill'),
+    path('order/pdf/<int:order_id>/', views.download_pdf, name='download_pdf'),
     path('order/clear/<int:table_id>/', views.clear_session, name='clear_session'),
     
     # Kitchen

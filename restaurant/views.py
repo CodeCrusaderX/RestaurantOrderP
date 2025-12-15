@@ -119,6 +119,10 @@ def order_status(request, table_id):
     
     return render(request, 'restaurant/status.html', {'table': table, 'order': order, 'items': items})
 
+from django.http import HttpResponse, FileResponse 
+import io
+from .utils import generate_pdf_receipt
+
 def bill(request, table_id):
     table = get_object_or_404(Table, id=table_id)
     order = Order.objects.filter(table=table, is_active=True).first()
@@ -132,9 +136,18 @@ def bill(request, table_id):
             print(f"------------ SMS SENT TO {phone} ------------")
             print(f"Bill Amount: {order.total_amount}")
             print("---------------------------------------------")
-            return JsonResponse({'status': 'sent'})
+            
+            # Return URL for PDF download
+            return JsonResponse({'status': 'sent', 'pdf_url': f'/order/pdf/{order.id}/'})
             
     return render(request, 'restaurant/bill.html', {'table': table, 'order': order})
+
+def download_pdf(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    buffer = io.BytesIO()
+    generate_pdf_receipt(buffer, order)
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename=f'bill_{order.id}.pdf')
 
 def clear_session(request, table_id):
     table = get_object_or_404(Table, id=table_id)

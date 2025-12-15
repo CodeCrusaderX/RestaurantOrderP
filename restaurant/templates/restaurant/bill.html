@@ -13,7 +13,7 @@
         <div id="phone-section">
             <p style="text-align: center; margin-bottom: 10px;">Enter Customer Phone for Digital Bill</p>
             <input type="tel" id="customerPhone" placeholder="Mobile Number" style="margin-bottom: 20px;">
-            <button class="btn btn-primary btn-block" onclick="sendBill()">Send Bill & Pay</button>
+            <button class="btn btn-primary btn-block" onclick="sendBill()">Send & Download Bill</button>
         </div>
     </div>
 
@@ -50,6 +50,13 @@
             });
 
             if (res.ok) {
+                const data = await res.json();
+
+                // Trigger Download
+                if (data.pdf_url) {
+                    window.open(data.pdf_url, '_blank');
+                }
+
                 document.getElementById('bill-summary').style.display = 'none';
                 document.getElementById('qr-section').style.display = 'block';
                 document.getElementById('sent-phone').innerText = phone;
