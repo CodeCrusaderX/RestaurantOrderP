@@ -33,6 +33,17 @@ def index(request):
     if request.method == "POST":
         table_number = request.POST.get('table_number')
         table = get_object_or_404(Table, number=table_number)
+        
+        # Check if already occupied (Race condition prevention)
+        if table.is_occupied:
+            tables = Table.objects.all()
+            return render(request, 'restaurant/index.html', {
+                'tables': tables, 
+                'error': f"Table {table.number} was just taken!"
+            })
+            
+        # Create active order immediately to lock the table
+        Order.objects.get_or_create(table=table, is_active=True)
         return redirect('menu', table_id=table.id)
     
     tables = Table.objects.all()

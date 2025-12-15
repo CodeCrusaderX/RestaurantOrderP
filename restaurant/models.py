@@ -25,6 +25,10 @@ class Table(models.Model):
     def __str__(self):
         return f"Table {self.number}"
 
+    @property
+    def is_occupied(self):
+        return self.orders.filter(is_active=True).exists()
+
 class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='orders')
     customer_phone = models.CharField(max_length=15, blank=True, null=True)
